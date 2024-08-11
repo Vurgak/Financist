@@ -1,15 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Financist.WebApi.Users.Application.Token.RefreshToken;
+using Financist.WebApi.Users.Application.ViewModels;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Financist.WebApi.Users.Module.Controllers;
 
 [ApiController]
 [Route("token")]
-public class TokenController : ControllerBase
+public class TokenController(ISender sender) : ControllerBase
 {
     [HttpPost]
-    public Task<ActionResult> RefreshTokenAsync(CancellationToken cancellationToken)
+    public async Task<ActionResult<TokensViewModel>> RefreshTokenAsync(
+        RefreshTokenCommand request,
+        CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var result = await sender.Send(request, cancellationToken);
+        return result;
     }
     
     [HttpDelete]

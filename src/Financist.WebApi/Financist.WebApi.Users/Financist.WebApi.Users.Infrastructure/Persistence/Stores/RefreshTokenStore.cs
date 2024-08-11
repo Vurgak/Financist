@@ -26,7 +26,13 @@ public class RefreshTokenStore : IRefreshTokenStore
     public async Task<bool> IsValidAsync(string refreshToken, CancellationToken cancellationToken)
     {
         return await _dbContext.RefreshTokens.AnyAsync(token =>
-            token.Value == refreshToken && token.ValidUntil <= _dateTimeOffsetProvider.Now, cancellationToken);
+            token.Value == refreshToken && _dateTimeOffsetProvider.UtcNow <= token.ValidUntil, cancellationToken);
+    }
+
+    public async Task<RefreshTokenEntity> GetAsync(string refreshToken, CancellationToken cancellationToken)
+    {
+        return await _dbContext.RefreshTokens.AsNoTracking()
+            .FirstAsync(token => token.Value == refreshToken, cancellationToken);
     }
     
     public async Task<string> GenerateTokenAsync(Guid userId, CancellationToken cancellationToken)
@@ -35,12 +41,13 @@ public class RefreshTokenStore : IRefreshTokenStore
             .ExecuteDeleteAsync(cancellationToken);
         
         var token = _refreshTokenGenerator.GenerateRefreshToken();
+        var generatedOn = _dateTimeOffsetProvider.UtcNow;
         var entity = new RefreshTokenEntity
         {
             Value = token,
             SubjectId = userId,
-            GeneratedOn = _dateTimeOffsetProvider.UtcNow,
-            ValidUntil = _dateTimeOffsetProvider.UtcNow.AddSeconds(604800), // TODO: Obtain the value from configuration.
+            GeneratedOn = generatedOn,
+            ValidUntil = generatedOn.AddSeconds(_refreshTokenGenerator.Expiration),
         };
 
         await _dbContext.RefreshTokens.AddAsync(entity, cancellationToken);
