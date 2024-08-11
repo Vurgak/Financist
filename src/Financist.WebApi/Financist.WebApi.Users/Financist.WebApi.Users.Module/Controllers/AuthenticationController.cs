@@ -1,5 +1,6 @@
 ﻿using Financist.WebApi.Users.Application.Authentication.AuthenticateUser;
 using Financist.WebApi.Users.Application.Authentication.RegisterUser;
+using Financist.WebApi.Users.Application.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,9 +18,11 @@ public class AuthenticationController(ISender sender) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> AuthenticateUserAsync(AuthenticateUserCommand request, CancellationToken cancellationToken)
+    public async Task<ActionResult<TokensViewModel>> AuthenticateUserAsync(
+        AuthenticateUserCommand request,
+        CancellationToken cancellationToken)
     {
-        await sender.Send(request, cancellationToken);
-        return Ok();
+        var tokens = await sender.Send(request, cancellationToken);
+        return Ok(tokens);
     }
 }

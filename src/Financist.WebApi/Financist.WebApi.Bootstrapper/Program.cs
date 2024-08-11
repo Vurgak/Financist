@@ -1,3 +1,4 @@
+using Financist.WebApi.Shared.DependencyInjection;
 using Financist.WebApi.Users.Module.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +10,8 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddUsersModule(builder.Configuration, builder.Environment);
+builder.Services.AddSharedServices()
+    .AddUsersModule(builder.Configuration, builder.Environment);
 
 var app = builder.Build();
 

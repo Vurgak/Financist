@@ -1,6 +1,8 @@
 ﻿using Financist.WebApi.Shared.EntityFramework;
+using Financist.WebApi.Users.Application.Abstractions.Authentication;
 using Financist.WebApi.Users.Application.Abstractions.Cryptography;
 using Financist.WebApi.Users.Application.Abstractions.Persistence;
+using Financist.WebApi.Users.Infrastructure.Authentication;
 using Financist.WebApi.Users.Infrastructure.Cryptography;
 using Financist.WebApi.Users.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +18,7 @@ public static class UsersInfrastructureServiceCollectionExtensions
         IConfiguration configuration, bool migrateDatabase)
     {
         services.AddUsersPersistence(configuration, migrateDatabase);
+        services.AddSingleton<IAccessTokenGenerator, AccessTokenGenerator>();
         services.AddSingleton<IPasswordHasher, Argon2PasswordHasher>();
         return services;
     }
