@@ -2,9 +2,11 @@
 using Financist.WebApi.Users.Application.Abstractions.Authentication;
 using Financist.WebApi.Users.Application.Abstractions.Cryptography;
 using Financist.WebApi.Users.Application.Abstractions.Persistence;
+using Financist.WebApi.Users.Application.Abstractions.Persistence.Stores;
 using Financist.WebApi.Users.Infrastructure.Authentication;
 using Financist.WebApi.Users.Infrastructure.Cryptography;
 using Financist.WebApi.Users.Infrastructure.Persistence;
+using Financist.WebApi.Users.Infrastructure.Persistence.Stores;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,8 +20,9 @@ public static class UsersInfrastructureServiceCollectionExtensions
         IConfiguration configuration, bool migrateDatabase)
     {
         services.AddUsersPersistence(configuration, migrateDatabase);
-        services.AddSingleton<IAccessTokenGenerator, AccessTokenGenerator>();
         services.AddSingleton<IPasswordHasher, Argon2PasswordHasher>();
+        services.AddSingleton<IAccessTokenGenerator, AccessTokenGenerator>();
+        services.AddSingleton<IRefreshTokenGenerator, RefreshTokenGenerator>();
         return services;
     }
 
@@ -28,6 +31,8 @@ public static class UsersInfrastructureServiceCollectionExtensions
         var connectionString = configuration.GetConnectionString("ApplicationDb");
         services.AddDbContext<IUsersDbContext, UsersDbContext>(options =>
             options.UseNpgsql(connectionString, ConfigureDbContext));
+
+        services.AddScoped<IRefreshTokenStore, RefreshTokenStore>();
         
         if (shouldMigrate)
             services.AddDbContextMigration<UsersDbContext>();

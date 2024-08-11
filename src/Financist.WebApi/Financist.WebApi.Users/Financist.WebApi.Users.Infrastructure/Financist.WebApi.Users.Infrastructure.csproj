@@ -22,7 +22,6 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Financist.WebApi.Shared\Financist.WebApi.Shared.csproj" />
       <ProjectReference Include="..\Financist.WebApi.Users.Application\Financist.WebApi.Users.Application.csproj" />
-      <ProjectReference Include="..\Financist.WebApi.Users.Domain\Financist.WebApi.Users.Domain.csproj" />
     </ItemGroup>
 
 </Project>

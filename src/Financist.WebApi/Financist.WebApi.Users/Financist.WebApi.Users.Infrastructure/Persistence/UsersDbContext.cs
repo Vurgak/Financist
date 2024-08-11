@@ -10,6 +10,7 @@ internal class UsersDbContext(DbContextOptions options) : DbContext(options), IU
     public const string MigrationsTableName = "_Migrations";
     
     public DbSet<UserEntity> Users => Set<UserEntity>();
+    public DbSet<RefreshTokenEntity> RefreshTokens => Set<RefreshTokenEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
