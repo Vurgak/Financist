@@ -1,4 +1,5 @@
 ﻿using Financist.WebApi.Users.Application.Token.RefreshToken;
+using Financist.WebApi.Users.Application.Token.RevokeToken;
 using Financist.WebApi.Users.Application.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -19,8 +20,9 @@ public class TokenController(ISender sender) : ControllerBase
     }
     
     [HttpDelete]
-    public Task<ActionResult> RevokeTokenAsync(CancellationToken cancellationToken)
+    public async Task<ActionResult> RevokeTokenAsync(RevokeTokenCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await sender.Send(request, cancellationToken);
+        return Ok();
     }
 }

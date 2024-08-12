@@ -32,7 +32,7 @@ public class RefreshTokenStore : IRefreshTokenStore
     public async Task<RefreshTokenEntity> GetAsync(string refreshToken, CancellationToken cancellationToken)
     {
         return await _dbContext.RefreshTokens.AsNoTracking()
-            .FirstAsync(token => token.Value == refreshToken, cancellationToken);
+            .SingleAsync(token => token.Value == refreshToken, cancellationToken);
     }
     
     public async Task<string> GenerateTokenAsync(Guid userId, CancellationToken cancellationToken)
@@ -53,5 +53,11 @@ public class RefreshTokenStore : IRefreshTokenStore
         await _dbContext.RefreshTokens.AddAsync(entity, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
         return token;
+    }
+
+    public async Task InvalidateAsync(string refreshToken, CancellationToken cancellationToken)
+    {
+        await _dbContext.RefreshTokens.Where(token => token.Value == refreshToken)
+            .ExecuteDeleteAsync(cancellationToken);
     }
 }

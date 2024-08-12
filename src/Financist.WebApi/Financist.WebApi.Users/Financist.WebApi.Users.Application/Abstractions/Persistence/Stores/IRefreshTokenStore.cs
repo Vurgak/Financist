@@ -9,4 +9,6 @@ public interface IRefreshTokenStore
     Task<RefreshTokenEntity> GetAsync(string refreshToken, CancellationToken cancellationToken);
 
     Task<string> GenerateTokenAsync(Guid userId, CancellationToken cancellationToken);
+    
+    Task InvalidateAsync(string refreshToken, CancellationToken cancellationToken);
 }
