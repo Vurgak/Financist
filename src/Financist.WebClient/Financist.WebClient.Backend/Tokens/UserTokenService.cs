@@ -12,6 +12,7 @@ public class UserTokenService : IUserTokenService
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IDateTimeOffsetProvider _dateTimeOffsetProvider;
     private readonly string _refreshTokenUrl;
+    private readonly string _revokeTokenUrl;
 
     public UserTokenService(
         IUserSessionStore userSessionStore,
@@ -27,6 +28,7 @@ public class UserTokenService : IUserTokenService
         configuration.GetSection("Authentication")
             .Bind(authenticationConfiguration);
         _refreshTokenUrl = $"{authenticationConfiguration.ServerUrl}/{authenticationConfiguration.RefreshTokenEndpoint}";
+        _revokeTokenUrl = $"{authenticationConfiguration.ServerUrl}/{authenticationConfiguration.RevokeTokenEndpoint}";
     }
     
     public async Task<string?> GetAccessTokenAsync(ClaimsPrincipal user, CancellationToken cancellationToken)
@@ -51,10 +53,24 @@ public class UserTokenService : IUserTokenService
         return tokens.AccessToken;
     }
 
+    public async Task RevokeRefreshToken(ClaimsPrincipal user, CancellationToken cancellationToken)
+    {
+        var sessionId = user.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Sid)?.Value;
+        if (sessionId is null)
+            return;
+
+        var session = await _userSessionStore.GetSessionDataAsync(sessionId);
+        if (session is null)
+            return;
+        
+        var httpClient = _httpClientFactory.CreateClient();
+        var request = new RevokeTokenRequest(session.RefreshToken);
+        await httpClient.PostAsJsonAsync(_refreshTokenUrl, request, cancellationToken);
+    }
+
     private async Task<TokensResponse?> RefreshAccessTokenAsync(string refreshToken, CancellationToken cancellationToken)
     {
         var httpClient = _httpClientFactory.CreateClient();
-
         var request = new RefreshTokenRequest(refreshToken);
         var response = await httpClient.PostAsJsonAsync(_refreshTokenUrl, request, cancellationToken);
         if (!response.IsSuccessStatusCode)

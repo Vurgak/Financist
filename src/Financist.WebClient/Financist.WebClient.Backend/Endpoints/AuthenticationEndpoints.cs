@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using Financist.WebClient.Backend.Contracts;
 using Financist.WebClient.Backend.Session;
 using Financist.WebClient.Backend.System;
+using Financist.WebClient.Backend.Tokens;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -61,8 +62,12 @@ public static class AuthenticationEndpoints
         return Results.Ok();
     }
 
-    private static async Task SignOutAsync(HttpContext context)
+    private static async Task SignOutAsync(
+        [FromServices] IUserTokenService userTokenService,
+        HttpContext context,
+        CancellationToken cancellationToken)
     {
         await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        await userTokenService.RevokeRefreshToken(context.User, cancellationToken);
     }
 }
