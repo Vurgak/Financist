@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using Financist.WebClient.Backend.Session;
+﻿using Financist.WebClient.Backend.Tokens;
 using Yarp.ReverseProxy.Transforms;
 using Yarp.ReverseProxy.Transforms.Builder;
 
@@ -22,16 +21,12 @@ public static class ApiGatewayServiceCollectionExtensions
         builder.AddRequestTransform(async context =>
         {
             using var services = builder.Services.CreateScope();
-            var userSessionStore = services.ServiceProvider.GetRequiredService<IUserSessionStore>();
+            var userTokenService = services.ServiceProvider.GetRequiredService<IUserTokenService>();
 
-            var claims = context.HttpContext.User.Claims;
-            var sessionId = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Sid)?.Value;
-            if (sessionId is null)
-                return;
-        
-            var session = await userSessionStore.GetSessionDataAsync(sessionId);
-            if (session is not null)
-                context.ProxyRequest.Headers.Add("Authorization", $"Bearer {session.AccessToken}");
+            var user = context.HttpContext.User;
+            var accessToken = await userTokenService.GetAccessTokenAsync(user, context.CancellationToken);
+            if (accessToken is not null)
+                context.ProxyRequest.Headers.Add("Authorization", $"Bearer {accessToken}");
         });
     }
 }

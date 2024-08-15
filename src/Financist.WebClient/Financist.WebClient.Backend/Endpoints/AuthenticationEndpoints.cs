@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using Financist.WebClient.Backend.Contracts;
 using Financist.WebClient.Backend.Session;
+using Financist.WebClient.Backend.System;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -20,11 +21,13 @@ public static class AuthenticationEndpoints
     private static async Task<IResult> SignUpAsync(
         [FromBody] SignUpRequest request,
         [FromServices] IHttpClientFactory httpClientFactory,
+        [FromServices] IConfiguration configuration,
         HttpContext context,
         CancellationToken cancellationToken)
     {
         var apiClient = httpClientFactory.CreateClient();
-        var response = await apiClient.PostAsJsonAsync("https://webapi/authenticate/register", request, cancellationToken);
+        var requestUrl = $"{configuration["Authentication:ServerUrl"]}/{configuration["Authentication:RegisterEndpoint"]}";
+        var response = await apiClient.PostAsJsonAsync(requestUrl, request, cancellationToken);
         return response.IsSuccessStatusCode ? Results.Ok() : Results.BadRequest();
     }
 
@@ -32,21 +35,19 @@ public static class AuthenticationEndpoints
         [FromBody] SignInRequest request,
         [FromServices] IHttpClientFactory httpClientFactory,
         [FromServices] IUserSessionStore userSessionStore,
+        [FromServices] IConfiguration configuration,
+        [FromServices] IDateTimeOffsetProvider dateTimeOffsetProvider,
         HttpContext context,
         CancellationToken cancellationToken)
     {
         var apiClient = httpClientFactory.CreateClient();
-        var response = await apiClient.PostAsJsonAsync("https://webapi/authenticate", request, cancellationToken);
+        var requestUrl = $"{configuration["Authentication:ServerUrl"]}/{configuration["Authentication:AuthenticateEndpoint"]}";
+        var response = await apiClient.PostAsJsonAsync(requestUrl, request, cancellationToken);
         if (!response.IsSuccessStatusCode)
             return Results.Unauthorized(); 
 
         var tokens = await response.Content.ReadFromJsonAsync<TokensResponse>(cancellationToken);
-        var sessionData = new UserSession
-        {
-            AccessToken = tokens!.AccessToken,
-            RefreshToken = tokens.RefreshToken,
-        };
-        
+        var sessionData = UserSession.FromTokensResponse(tokens!, dateTimeOffsetProvider.Now);
         var sessionId = RandomNumberGenerator.GetHexString(16);
         var claims = new List<Claim>
         {

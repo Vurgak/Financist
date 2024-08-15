@@ -1,4 +1,4 @@
-﻿namespace Financist.WebClient.Backend.Services;
+﻿namespace Financist.WebClient.Backend.ApiGateway;
 
 public class EndpointRoutingExclusionService
 {

@@ -1,4 +1,4 @@
-﻿using Financist.WebClient.Backend.Services;
+﻿using Financist.WebClient.Backend.ApiGateway;
 
 namespace Financist.WebClient.Backend.DependencyInjection;
 

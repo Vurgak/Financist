@@ -32,6 +32,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = configuration.Issuer,
             ValidAudience = configuration.Audience,
             IssuerSigningKey = signingKey,
+            ClockSkew = TimeSpan.FromSeconds(10),
         };
     });
 
