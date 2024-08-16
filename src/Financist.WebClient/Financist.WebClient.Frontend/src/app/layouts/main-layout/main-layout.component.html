@@ -1,0 +1,14 @@
+<div class="min-h-screen flex flex-col items-center">
+  <header class="w-full flex justify-between items-center p-2 border shadow-sm">
+    <h1 class="text-2xl font-medium tracking-tight">Financist</h1>
+    <button (click)="onSignOut()" class="button-outline">Sign out</button>
+  </header>
+
+  <main class="w-full grow p-2">
+    <router-outlet />
+  </main>
+
+  <footer class="px-2 py-1 text-sm text-muted-foreground">
+    &copy; Damian Koski 2024. All rights reserved.
+  </footer>
+</div>

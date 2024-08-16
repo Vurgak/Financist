@@ -1,6 +1,8 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var postgres = builder.AddPostgres("postgres");
+var postgres = builder.AddPostgres("postgres")
+    .WithPgAdmin();
+
 var database = postgres.AddDatabase("database", "financist");
 
 var redis = builder.AddRedis("redis");
