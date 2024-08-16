@@ -7,6 +7,7 @@ using Financist.WebClient.Backend.Tokens;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace Financist.WebClient.Backend.Endpoints;
 
@@ -17,6 +18,7 @@ public static class AuthenticationEndpoints
         builder.MapPost("sign-up", SignUpAsync);
         builder.MapPost("sign-in", SignInAsync);
         builder.MapPost("sign-out", SignOutAsync);
+        builder.MapGet("session", (Delegate)GetSessionInformationAsync);
     }
 
     private static async Task<IResult> SignUpAsync(
@@ -69,5 +71,33 @@ public static class AuthenticationEndpoints
     {
         await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         await userTokenService.RevokeRefreshToken(context.User, cancellationToken);
+    }
+
+    private static async Task<IResult> GetSessionInformationAsync(
+        [FromServices] IUserSessionStore userSessionStore,
+        HttpContext context)
+    {
+        var authenticationResult = await context.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        if (!authenticationResult.Succeeded)
+            return Results.Unauthorized();
+
+        var sessionId = context.User.Claims.First(claim => claim.Type == ClaimTypes.Sid).Value;
+        var userSession = await userSessionStore.GetSessionDataAsync(sessionId);
+
+        var subjectId = GetSubjectIdFromAccessToken(userSession!.AccessToken);
+        var sessionInformation = new SessionInformation
+        {
+            SubjectId = subjectId,
+            SessionId = sessionId,
+            SessionExpiresIn = (int)authenticationResult.Properties.ExpiresUtc!.Value.Subtract(DateTimeOffset.Now).TotalSeconds,
+        };
+        return Results.Ok(sessionInformation);
+    }
+
+    private static string GetSubjectIdFromAccessToken(string accessToken)
+    {
+        var tokenHandler = new JsonWebTokenHandler();
+        var decodedToken = (JsonWebToken)tokenHandler.ReadToken(accessToken);
+        return decodedToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Sub).Value;
     }
 }
