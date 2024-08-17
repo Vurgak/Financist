@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { HttpClient } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { UserSessionModel } from "@app/models/user-session.model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class AuthenticationService {
   private httpClient = inject(HttpClient);
@@ -18,5 +19,9 @@ export class AuthenticationService {
 
   logOut(): Observable<object> {
     return this.httpClient.post("api/sign-out", {});
+  }
+
+  getUserSession(): Observable<UserSessionModel> {
+    return this.httpClient.get<UserSessionModel>("api/session");
   }
 }
