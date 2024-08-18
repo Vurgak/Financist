@@ -7,6 +7,8 @@ import { DashboardPageComponent } from "@app/pages/main/dashboard-page/dashboard
 import { HomePageComponent } from "@app/pages/home-page/home-page.component";
 import { isAuthenticatedGuard } from "@app/guards/is-authenticated.guard";
 import { isUnauthenticatedGuard } from "@app/guards/is-unauthenticated.guard";
+import { BookPageComponent } from "@app/pages/main/book-page/book-page.component";
+import { NewBookPageComponent } from "@app/pages/main/new-book-page/new-book-page.component";
 
 export const routes: Routes = [
   {
@@ -37,6 +39,16 @@ export const routes: Routes = [
       {
         path: "dashboard",
         component: DashboardPageComponent,
+        canActivate: [isAuthenticatedGuard],
+      },
+      {
+        path: "book/new",
+        component: NewBookPageComponent,
+        canActivate: [isAuthenticatedGuard],
+      },
+      {
+        path: "book/:bookId",
+        component: BookPageComponent,
         canActivate: [isAuthenticatedGuard],
       },
     ],

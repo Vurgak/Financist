@@ -1,0 +1,11 @@
+<h2 class="page-header">Create a new budget</h2>
+<span class="italic text-sm">Required fields are marked with an asterisk (*).</span>
+
+<form [formGroup]="form" (submit)="onSubmit()" class="flex flex-col gap-6 mt-6">
+  <div>
+    <label for="name" class="label">Budget name *</label>
+    <input id="name" type="text" formControlName="name" class="input max-w-64" />
+  </div>
+
+  <button type="submit" class="button-primary self-end">Create budget</button>
+</form>

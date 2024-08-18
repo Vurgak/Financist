@@ -78,3 +78,7 @@
 .input {
   @apply block w-full border border-input p-2 text-sm shadow-sm;
 }
+
+.page-header {
+  @apply text-2xl font-semibold;
+}

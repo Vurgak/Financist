@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, tap } from "rxjs";
 import { UserSessionModel } from "@app/models/user-session.model";
 
 @Injectable({
@@ -8,6 +8,8 @@ import { UserSessionModel } from "@app/models/user-session.model";
 })
 export class AuthenticationService {
   private httpClient = inject(HttpClient);
+
+  private userSession: UserSessionModel | null = null;
 
   register(email: string, password: string): Observable<object> {
     return this.httpClient.post("api/sign-up", { email, password });
@@ -22,6 +24,16 @@ export class AuthenticationService {
   }
 
   getUserSession(): Observable<UserSessionModel> {
-    return this.httpClient.get<UserSessionModel>("api/session");
+    return this.httpClient.get<UserSessionModel>("api/session")
+      .pipe(
+        tap({
+          next: session => this.userSession = session,
+          error: () => this.userSession = null,
+        }),
+      );
+  }
+
+  get userId(): string {
+    return this.userSession?.subjectId ?? "";
   }
 }
