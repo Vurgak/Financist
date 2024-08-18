@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="FastEndpoints.Swagger" Version="5.28.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
           <PrivateAssets>all</PrivateAssets>
@@ -16,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Financist.WebApi.Accounting\Financist.WebApi.Accounting.csproj" />
       <ProjectReference Include="..\Financist.WebApi.Users\Financist.WebApi.Users.Module\Financist.WebApi.Users.Module.csproj" />
     </ItemGroup>
 

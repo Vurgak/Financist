@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Financist.WebApi.Users.Infrastructure.Persistence;
 
-internal class UsersDbContext(DbContextOptions options) : DbContext(options), IUsersDbContext
+internal class UsersDbContext(DbContextOptions<UsersDbContext> options) : DbContext(options), IUsersDbContext
 {
     public const string Schema = "users";
     public const string MigrationsTableName = "_Migrations";

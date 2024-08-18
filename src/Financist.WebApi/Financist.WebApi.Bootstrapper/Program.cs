@@ -1,4 +1,7 @@
 using System.Text;
+using FastEndpoints;
+using FastEndpoints.Swagger;
+using Financist.WebApi.Accounting.DependencyInjection;
 using Financist.WebApi.Shared.DependencyInjection;
 using Financist.WebApi.Users.Infrastructure.Authentication;
 using Financist.WebApi.Users.Module.DependencyInjection;
@@ -13,6 +16,9 @@ builder.Services.AddControllers(options =>
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddFastEndpoints()
+    .SwaggerDocument();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -37,7 +43,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddSharedServices()
-    .AddUsersModule(builder.Configuration, builder.Environment);
+    .AddUsersModule(builder.Configuration, builder.Environment)
+    .AddAccountingModule(builder.Configuration, builder.Environment);
 
 var app = builder.Build();
 
@@ -53,5 +60,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapFastEndpoints()
+    .MapSwagger();
 
 app.Run();
