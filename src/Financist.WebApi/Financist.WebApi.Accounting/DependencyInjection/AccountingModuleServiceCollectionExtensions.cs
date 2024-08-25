@@ -19,6 +19,9 @@ public static class AccountingModuleServiceCollectionExtensions
         var migrateDatabase = environment.IsDevelopment();
         services.AddAccountingPersistence(configuration, migrateDatabase);
         
+        var assembly = typeof(AccountingModuleServiceCollectionExtensions).Assembly;
+        services.AddMediatR(config => config.RegisterServicesFromAssembly(assembly));
+        
         return services;
     }
 

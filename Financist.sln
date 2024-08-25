@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Financist.WebApi.Users.Infr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Financist.WebApi.Accounting", "src\Financist.WebApi\Financist.WebApi.Accounting\Financist.WebApi.Accounting.csproj", "{CDAD26BD-92D3-4E10-A43F-97B1B5B6E65D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Financist.WebApi.Users.Integration", "src\Financist.WebApi\Financist.WebApi.Users\Financist.WebApi.Users.Integration\Financist.WebApi.Users.Integration.csproj", "{9C371D6F-6544-4E27-9774-AFFC265324E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,6 +91,10 @@ Global
 		{CDAD26BD-92D3-4E10-A43F-97B1B5B6E65D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDAD26BD-92D3-4E10-A43F-97B1B5B6E65D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDAD26BD-92D3-4E10-A43F-97B1B5B6E65D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C371D6F-6544-4E27-9774-AFFC265324E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C371D6F-6544-4E27-9774-AFFC265324E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C371D6F-6544-4E27-9774-AFFC265324E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C371D6F-6544-4E27-9774-AFFC265324E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -110,6 +116,7 @@ Global
 		{0C80A284-DEC7-4876-9FA1-FDF6F44AD5BA} = {1155D754-3DCE-437A-90AE-E08AD7C25AB2}
 		{5557BC87-9899-488F-908C-CBBEBB831B3C} = {0C80A284-DEC7-4876-9FA1-FDF6F44AD5BA}
 		{CDAD26BD-92D3-4E10-A43F-97B1B5B6E65D} = {F35C1D8D-5CB1-446B-8F69-19149EB3BA31}
+		{9C371D6F-6544-4E27-9774-AFFC265324E5} = {6F670564-153E-410C-92AA-301CE14A7525}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {44EE6C3B-9C50-4773-B6E5-C83064E730FA}

@@ -8,11 +8,13 @@
 
     <ItemGroup>
       <PackageReference Include="FastEndpoints" Version="5.28.0" />
+      <PackageReference Include="MediatR" Version="12.4.0" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Financist.WebApi.Shared\Financist.WebApi.Shared.csproj" />
+      <ProjectReference Include="..\Financist.WebApi.Users\Financist.WebApi.Users.Integration\Financist.WebApi.Users.Integration.csproj" />
     </ItemGroup>
 
 </Project>

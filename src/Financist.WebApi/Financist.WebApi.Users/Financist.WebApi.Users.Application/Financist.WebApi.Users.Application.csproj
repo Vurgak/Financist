@@ -15,6 +15,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Financist.WebApi.Users.Domain\Financist.WebApi.Users.Domain.csproj" />
+      <ProjectReference Include="..\Financist.WebApi.Users.Integration\Financist.WebApi.Users.Integration.csproj" />
     </ItemGroup>
 
 </Project>
